@@ -25,37 +25,39 @@ use app\models\test;
  * @author alex
  * @var $model app\models\AddHSForm
  */
-class HealthcareServController extends Controller {
-    
-    public function actionIndex()
+class HealthcareServController extends Controller
+{
+
+    public function actionIndex() 
     {
         $model = new AddHSForm();
-        
+
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-            
+
             $model->daysOfWeek = $model->getDaysOfWeek($model);
-            
-            if( $model->save() ){
+
+            if ($model->save()) {
                 Yii::$app->session->setFlash('success', 'Данные приняты');
-            }else{
+            } else {
                 var_dump($model->getErrors());
                 die();
                 Yii::$app->session->setFlash('error', 'Ошибка');
             }
-            
+
             $helthserv = $model->find([
                 'specialityType' => $model->specialityType
             ])->one();
-            
+
             $structure = $model->setStructure($model);
-            
-            return $this->render('result',[
-            'struct' => $structure
+
+            return $this->render('result', [
+                'struct' => $structure
             ]);
         }
-        
-        return $this->render('index',[
+
+        return $this->render('index', [
             'model' => $model
         ]);
     }
+
 }

@@ -11,35 +11,21 @@ namespace app\models;
 use kartik\datetime\DateTimePicker;
 use yii\db\ActiveRecord;
 use DateTime;
+
 /**
- * Description of AddHSForm
- *
+ * AddHSForm is a form model for adding medical services
+ * 
  * @author alex
  */
-class AddHSForm extends ActiveRecord {
-
-//    public $divisionId = '8be63';
-//    public $specialityType;
-//    public $providingCondition;
-//    public $comment;
-//    public $daysOfWeek;
-//    public $allDay;
-//    public $startA;
-//    public $endA;
-//    public $notADesc;
-//    public $startNA;
-//    public $endNA;
-
-    public function __construct() {
-
-    }
-    
-    public static function tableName()
+class AddHSForm extends ActiveRecord 
+{
+    public static function tableName() 
     {
         return '{{AddHSForm}}';
     }
 
-    public function rules() {
+    public function rules() 
+    {
 
         return [
             [['specialityType'], 'required'],
@@ -50,7 +36,8 @@ class AddHSForm extends ActiveRecord {
         ];
     }
 
-    public function attributeLabels() {
+    public function attributeLabels() 
+    {
         return [
             'specialityType' => 'Специальность',
             'providingCondition' => 'Режим приема',
@@ -64,40 +51,44 @@ class AddHSForm extends ActiveRecord {
     }
 
     //Формирю структуру
-    public function setStructure($model) {
-        
+    public function setStructure($model) 
+    {
         $this->getIsoFormatDate($model->startNA);
-        
+
         return "{
-            'division_id': '".$this->divisionId."',
-            'speciality_type': '".$model->specialityType."',
-            'providing_condition': '".$model->providingCondition."',
-            'comment': '".$model->comment."',
+            'division_id': '" . $this->divisionId . "',
+            'speciality_type': '" . $model->specialityType . "',
+            'providing_condition': '" . $model->providingCondition . "',
+            'comment': '" . $model->comment . "',
             'available_time': [
               {
-                'days_of_week': '[".$model->daysOfWeek."]',
-                'all_day': ".($model->allDay ? 'true' : 'false').",
-                'available_start_time': '".($model->startA ? $model->startA .':00' : '')."',
-                'available_end_time': '".($model->endA ? $model->endA .':00' : '')."'
+                'days_of_week': '[" . $model->daysOfWeek . "]',
+                'all_day': " . ($model->allDay ? 'true' : 'false') . ",
+                'available_start_time': '" . ($model->startA ? $model->startA .
+                ':00' : '') . "',
+                'available_end_time': '" . ($model->endA ? $model->endA .
+                ':00' : '') . "'
               }
             ],
             'not_available': [
               {
                 'description': 'Санітарний день',
                 'during': {
-                  'start': '".($model->startNA ? $this->getIsoFormatDate($model->startNA) : '')."',
-                  'end': '".($model->endNA ? $this->getIsoFormatDate($model->endNA) : '')."'
+                  'start': '" . 
+                ($model->startNA ? $this->getIsoFormatDate($model->startNA) : '') . "',
+                  'end': '" . 
+                ($model->endNA ? $this->getIsoFormatDate($model->endNA) : '') . "'
                 }
               }
             ]
           }";
     }
-    
+
     //Возвращает выбранные дни
-    public function getDaysOfWeek($model){
-        
-        if($model->daysOfWeek)
-        {
+    public function getDaysOfWeek($model) 
+    {
+
+        if ($model->daysOfWeek) {
             $daysOfWeek = [];
             $days = [
                 0 => 'Mon',
@@ -108,6 +99,7 @@ class AddHSForm extends ActiveRecord {
                 5 => 'Sat',
                 6 => 'Sun'
             ];
+            
             foreach ($model->daysOfWeek as $key => $day) {
                 $daysOfWeek[] = $days[$day];
             }
@@ -117,17 +109,16 @@ class AddHSForm extends ActiveRecord {
             return $daysOfWeek;
         }
     }
-    
+
     /**
      * 
      * @param type string
      * Преобразование времени в формат iso8061
      */
-    public function getIsoFormatDate($dateTime){
-     
+    public function getIsoFormatDate($dateTime) 
+    {
         $date = new DateTime($dateTime);
         return $date->format(DateTime::ATOM);
-        
     }
 
 }
