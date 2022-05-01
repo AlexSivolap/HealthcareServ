@@ -25,22 +25,35 @@ $this->title = 'HealthcareServices';
                 <?= $form->field($model, 'specialityType') ?>
                 <?= $form->field($model, 'providingCondition') ?>
                 <?= $form->field($model, 'comment') ?>
-                <?= $form->field($model, 'daysOfWeek')->dropdownList(
-                        ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'],
-                        ['multiple' => 'true']
-                    )
+                <?php
+                    //Дни недели и время
+                    foreach($week as $dayUS => $dayUA)
+                    {
+                        echo('<label>'.$dayUA);
+                            echo($form->field($model, "daysOfWeek[".$dayUS."Start]", ['inputOptions' => ['class' => '']])
+                                ->input('time')->label('Начало &nbsp &nbsp &nbsp'));
+                            echo($form->field($model, "daysOfWeek[".$dayUS."End]", ['inputOptions' => ['class' => '']])
+                                ->input('time')->label('Окончание'));
+                        echo('</label>');
+
+                    }
+                ?>
+                <?//= $form->field($model, 'daysOfWeek')->dropdownList(
+//                        ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'],
+//                        ['multiple' => 'true']
+//                    )
                 ?>
             </div>
 
             <div class="col-md-2 h-100">
-                <?= $form->field($model, 'startA', ['inputOptions' => ['class' => '']])
-                    ->input('time')
+                <?//= $form->field($model, 'startA', ['inputOptions' => ['class' => '']])
+                 //   ->input('time')
                 ?>
             </div>
 
             <div class="col-md-2 h-100">
-                <?= $form->field($model, 'endA', ['inputOptions' => ['class' => '']])
-                    ->input('time')
+                <?//= $form->field($model, 'endA', ['inputOptions' => ['class' => '']])
+                  //  ->input('time')
                 ?>
             </div>
 

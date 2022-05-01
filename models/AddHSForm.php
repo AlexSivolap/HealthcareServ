@@ -19,6 +19,8 @@ use DateTime;
  */
 class AddHSForm extends ActiveRecord 
 {
+    public $dayOfWeek;
+    
     public static function tableName() 
     {
         return '{{AddHSForm}}';
@@ -31,7 +33,7 @@ class AddHSForm extends ActiveRecord
             [['specialityType'], 'required'],
             [['providingCondition', 'comment'], 'string'],
             [['allDay'], 'boolean'],
-            [['startNA', 'endNA', 'daysOfWeek'], 'safe'],
+            [['startNA', 'endNA', 'daysOfWeek', 'dayOfWeek'], 'safe'],
             [['startA', 'endA'], 'time', 'format' => 'php:H:m']
         ];
     }
@@ -50,39 +52,7 @@ class AddHSForm extends ActiveRecord
         ];
     }
 
-    //Формирю структуру
-    public function setStructure($model) 
-    {
-        $this->getIsoFormatDate($model->startNA);
-
-        return "{
-            'division_id': '" . $this->divisionId . "',
-            'speciality_type': '" . $model->specialityType . "',
-            'providing_condition': '" . $model->providingCondition . "',
-            'comment': '" . $model->comment . "',
-            'available_time': [
-              {
-                'days_of_week': '[" . $model->daysOfWeek . "]',
-                'all_day': " . ($model->allDay ? 'true' : 'false') . ",
-                'available_start_time': '" . ($model->startA ? $model->startA .
-                ':00' : '') . "',
-                'available_end_time': '" . ($model->endA ? $model->endA .
-                ':00' : '') . "'
-              }
-            ],
-            'not_available': [
-              {
-                'description': 'Санітарний день',
-                'during': {
-                  'start': '" . 
-                ($model->startNA ? $this->getIsoFormatDate($model->startNA) : '') . "',
-                  'end': '" . 
-                ($model->endNA ? $this->getIsoFormatDate($model->endNA) : '') . "'
-                }
-              }
-            ]
-          }";
-    }
+    
 
     //Возвращает выбранные дни
     public function getDaysOfWeek($model) 
@@ -109,16 +79,4 @@ class AddHSForm extends ActiveRecord
             return $daysOfWeek;
         }
     }
-
-    /**
-     * 
-     * @param type string
-     * Преобразование времени в формат iso8061
-     */
-    public function getIsoFormatDate($dateTime) 
-    {
-        $date = new DateTime($dateTime);
-        return $date->format(DateTime::ATOM);
-    }
-
 }

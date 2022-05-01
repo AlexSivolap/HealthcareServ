@@ -17,6 +17,7 @@ use app\models\LoginForm;
 use app\models\ContactForm;
 use app\models\AddHSForm;
 use app\models\test;
+use app\models\AddFormService;
 
 /**
  * Description of HealthcareServController
@@ -30,24 +31,22 @@ class HealthcareServController extends Controller
     public function actionIndex() 
     {
         $model = new AddHSForm();
-
+        $formService = new AddFormService();
+        
+        $week = $formService->getDayOfWeek();
+        
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+            
+            //$model->daysOfWeek = json_encode($model->daysOfWeek);
+//            var_dump($model->daysOfWeek);
+//            die;
+            //$model->daysOfWeek = $model->getDaysOfWeek($model);
 
-            $model->daysOfWeek = $model->getDaysOfWeek($model);
+            
 
-            if ($model->save()) {
-                Yii::$app->session->setFlash('success', 'Данные приняты');
-            } else {
-                var_dump($model->getErrors());
-                die();
-                Yii::$app->session->setFlash('error', 'Ошибка');
-            }
+            
 
-            $helthserv = $model->find([
-                'specialityType' => $model->specialityType
-            ])->one();
-
-            $structure = $model->setStructure($model);
+            $structure = $formService->setStructure($model);
 
             return $this->render('result', [
                 'struct' => $structure
@@ -55,7 +54,8 @@ class HealthcareServController extends Controller
         }
 
         return $this->render('index', [
-            'model' => $model
+            'model' => $model,
+            'week' => $week
         ]);
     }
 
