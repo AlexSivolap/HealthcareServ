@@ -34,7 +34,7 @@ class AddHSForm extends ActiveRecord
             [['providingCondition', 'comment'], 'string'],
             [['allDay'], 'boolean'],
             [['startNA', 'endNA', 'daysOfWeek', 'dayOfWeek'], 'safe'],
-            [['startA', 'endA'], 'time', 'format' => 'php:H:m']
+            //[['daysOfWeek'], 'time', 'format' => 'php:H:m']
         ];
     }
 
